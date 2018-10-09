@@ -88,7 +88,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   and the following is a good resource for the actual equation to implement (look at equation 
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
-	//const double maxErr = pow(sensor_range, 2);
 	const std::vector<Map::single_landmark_s> &landmarks = map_landmarks.landmark_list;
 	for (int i = 0; i < num_particles; ++i) {
 		Particle &particle = particles[i];
@@ -122,16 +121,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		for (int j = 0; j < particle.associations.size(); ++j) {
 			const double xSqrErr = pow(particle.sense_x[j] - landmarks[particle.associations[j] -1].x_f, 2);
 			const double ySqrErr = pow(particle.sense_y[j] - landmarks[particle.associations[j] -1].y_f, 2);
-/*
-			if (xSqrErr > maxErr || ySqrErr > maxErr ||xSqrErr + ySqrErr > maxErr) {
-				weights[i] = 0.0;
-				break;
-			} else {
-*/
 			double weight_tem = 0.5/(M_PI*std_landmark[0]*std_landmark[1])*
 								exp(-0.5*(xSqrErr/pow(std_landmark[0], 2) + ySqrErr/pow(std_landmark[1], 2)));
 			weights[i] *= weight_tem;
-			//}
+		
 		}
 	}
 }
